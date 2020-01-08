@@ -1,0 +1,47 @@
+<Configuration status="INFO">
+	<Properties>
+		<Property name="basePath">Log</Property>
+		<Property name="patternPath">$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz
+		</Property>
+		<Property name="nameLogFileInfo">BackEnd_BetStat_Log_info</Property>
+		<Property name="nameLogFileError">ERROR__BackEnd_BetStat_Log</Property>
+	</Properties>
+	<Appenders>
+		<Console name="LogToConsole" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{HH:mm:s.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingFile name="BackEnd_BetStat_RollingFile_INFO"
+			fileName="${basePath}/${nameLogFileInfo}.log"
+			filePattern="${basePath}/${patternPath}">
+			<LevelRangeFilter minLevel="info" maxLevel="info" />
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="BackEnd_BetStat_RollingFile_ERROR"
+			fileName="${basePath}/${nameLogFileError}.log"
+			filePattern="${basePath}/${patternPath}">
+			<LevelRangeFilter minLevel="error" maxLevel="error" />
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="LogToConsole" />
+			<AppenderRef ref="BackEnd_BetStat_RollingFile_INFO" />
+			<AppenderRef ref="BackEnd_BetStat_RollingFile_ERROR" />
+		</Root>
+	</Loggers>
+</Configuration>
