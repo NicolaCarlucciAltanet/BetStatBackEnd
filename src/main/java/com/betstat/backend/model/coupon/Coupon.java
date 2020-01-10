@@ -89,4 +89,12 @@ public class Coupon {
 		this.vincita = vincita;
 	}
 
+	@Override
+	public String toString() {
+		return "Coupon [id_coupon=" + id_coupon + ", data_coupon=" + data_coupon + ", tipo=" + tipo + ", esito=" + esito
+				+ ", utente=" + utente + ", importo=" + importo + ", vincita=" + vincita + "]";
+	}
+	
+	
+
 }

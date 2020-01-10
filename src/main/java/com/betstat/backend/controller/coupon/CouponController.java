@@ -31,7 +31,7 @@ public class CouponController {
 	public void readcouponController() {
 		logger.info("START readcouponController");
 		//ServicesCoupon serviceCoupon = new ServicesCoupon();
-		serviceCoupon.readSourcePageHtml(filePath, fileName);
+		serviceCoupon.readCouponFromHtml(filePath, fileName);
 		logger.info("END readcouponController");
 	}
 

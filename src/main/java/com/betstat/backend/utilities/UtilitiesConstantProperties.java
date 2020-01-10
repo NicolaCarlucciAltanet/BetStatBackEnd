@@ -10,10 +10,12 @@ public class UtilitiesConstantProperties {
 
 	// -----------------COUPON_______________________________________
 
-	public static final String COUPON_DATA_NAME = "coupon.data.name";
-
 	public static final String COUPON_DATA_CLASS = "coupon.data.class";
 
-	public static final String COUPON_DATA_ENDLENGTHCLASS = "coupon.data.endLengthClass";
+	public static final String COUPON_COD_COUPON_CLASS = "coupon.cod.coupon.class";
+	
+	public static final String COUPON_TIPO_CLASS = "coupon.tipo.class";
+
+
 
 }

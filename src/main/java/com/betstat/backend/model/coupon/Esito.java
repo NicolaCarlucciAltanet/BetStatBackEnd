@@ -6,6 +6,9 @@ public class Esito {
 
 	private String nome_esito;
 
+	public Esito() {
+	}
+
 	public Esito(String id_esito, String nome_esito) {
 		this.id_esito = id_esito;
 		this.nome_esito = nome_esito;
@@ -25,6 +28,11 @@ public class Esito {
 
 	public void setNome_esito(String nome_esito) {
 		this.nome_esito = nome_esito;
+	}
+
+	@Override
+	public String toString() {
+		return "Esito [id_esito=" + id_esito + ", nome_esito=" + nome_esito + "]";
 	}
 
 }

@@ -6,6 +6,9 @@ public class Tipo {
 
 	private String nome_tipo;
 
+	public Tipo() {
+	}
+
 	public Tipo(String id_tipo, String nome_tipo) {
 		this.id_tipo = id_tipo;
 		this.nome_tipo = nome_tipo;
