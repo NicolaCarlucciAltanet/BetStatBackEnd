@@ -6,8 +6,6 @@ public class DettaglioCoupon {
 
 	private String id_dettaglio_coupon;
 
-	private Coupon coupon;
-
 	private Squadra squadra_casa;
 
 	private Squadra squadra_ospite;
@@ -18,18 +16,23 @@ public class DettaglioCoupon {
 
 	private Pronostico pronostico;
 
-	private String quota;
+	private float quota;
 
-	public DettaglioCoupon(String id_dettaglio_coupon, Coupon coupon, Squadra squadra_casa, Squadra squadra_ospite,
-			Date data_dettaglio_coupon, String id_evento, Pronostico pronostico, String quota) {
+	private Esito esito;
+
+	public DettaglioCoupon() {
+	}
+
+	public DettaglioCoupon(String id_dettaglio_coupon, Squadra squadra_casa, Squadra squadra_ospite,
+			Date data_dettaglio_coupon, String id_evento, Pronostico pronostico, float quota, Esito esito) {
 		this.id_dettaglio_coupon = id_dettaglio_coupon;
-		this.coupon = coupon;
 		this.squadra_casa = squadra_casa;
 		this.squadra_ospite = squadra_ospite;
 		this.data_dettaglio_coupon = data_dettaglio_coupon;
 		this.id_evento = id_evento;
 		this.pronostico = pronostico;
 		this.quota = quota;
+		this.esito = esito;
 	}
 
 	public String getId_dettaglio_coupon() {
@@ -38,14 +41,6 @@ public class DettaglioCoupon {
 
 	public void setId_dettaglio_coupon(String id_dettaglio_coupon) {
 		this.id_dettaglio_coupon = id_dettaglio_coupon;
-	}
-
-	public Coupon getCoupon() {
-		return coupon;
-	}
-
-	public void setCoupon(Coupon coupon) {
-		this.coupon = coupon;
 	}
 
 	public Squadra getSquadra_casa() {
@@ -88,12 +83,28 @@ public class DettaglioCoupon {
 		this.pronostico = pronostico;
 	}
 
-	public String getQuota() {
+	public float getQuota() {
 		return quota;
 	}
 
-	public void setQuota(String quota) {
+	public void setQuota(float quota) {
 		this.quota = quota;
+	}
+
+	public Esito getEsito() {
+		return esito;
+	}
+
+	public void setEsito(Esito esito) {
+		this.esito = esito;
+	}
+
+	@Override
+	public String toString() {
+		return "DettaglioCoupon [id_dettaglio_coupon=" + id_dettaglio_coupon + ", squadra_casa=" + squadra_casa
+				+ ", squadra_ospite=" + squadra_ospite + ", data_dettaglio_coupon=" + data_dettaglio_coupon
+				+ ", id_evento=" + id_evento + ", pronostico=" + pronostico + ", quota=" + quota + ", esito=" + esito
+				+ "]";
 	}
 
 }
