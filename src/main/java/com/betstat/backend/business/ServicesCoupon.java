@@ -136,10 +136,18 @@ public class ServicesCoupon {
 									+ element.getElementsByClass(couponMarketName).text().split("\\(")[1]
 											.split("\\)")[0];
 						}
-						dettaglioCouponPrec.setPronostico(new Pronostico("", pronostico));
+						DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
+						dettaglioCoupon.setSquadra_casa(dettaglioCouponPrec.getSquadra_casa());
+						dettaglioCoupon.setSquadra_ospite(dettaglioCouponPrec.getSquadra_ospite());
+						dettaglioCoupon.setData_dettaglio_coupon(dettaglioCoupon.getData_dettaglio_coupon());
+						dettaglioCoupon.setId_evento(dettaglioCoupon.getId_evento());
+						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
+						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
+
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-						dettaglioCouponPrec.setEsito(new Esito("", esito));
-						listDettaglioCoupon.add(dettaglioCouponPrec);
+
+						dettaglioCoupon.setEsito(new Esito("", esito));
+						listDettaglioCoupon.add(dettaglioCoupon);
 					}
 				}
 				coupon.setListDettaglioCoupon(listDettaglioCoupon);
