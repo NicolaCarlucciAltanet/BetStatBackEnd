@@ -143,9 +143,7 @@ public class ServicesCoupon {
 						dettaglioCoupon.setId_evento(dettaglioCoupon.getId_evento());
 						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
 						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
-
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-
 						dettaglioCoupon.setEsito(new Esito("", esito));
 						listDettaglioCoupon.add(dettaglioCoupon);
 					}
