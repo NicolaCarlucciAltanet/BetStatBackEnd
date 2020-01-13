@@ -9,17 +9,17 @@ public class ERRORResponse extends ModelResponse {
 	private String description;
 
 	@Override
-	String getType() {
+	public String getType() {
 		return type;
 	}
 
 	@Override
-	String getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
 	@Override
-	void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 

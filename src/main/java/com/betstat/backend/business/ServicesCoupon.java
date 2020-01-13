@@ -5,8 +5,9 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,10 +19,18 @@ import org.springframework.stereotype.Component;
 
 import com.betstat.backend.controller.coupon.CouponController;
 import com.betstat.backend.model.coupon.Coupon;
+import com.betstat.backend.model.coupon.DettaglioCoupon;
 import com.betstat.backend.model.coupon.Esito;
+import com.betstat.backend.model.coupon.Pronostico;
+import com.betstat.backend.model.coupon.Squadra;
 import com.betstat.backend.model.coupon.Tipo;
+import com.betstat.backend.model.response.ERRORResponse;
+import com.betstat.backend.model.response.ModelResponse;
+import com.betstat.backend.model.response.OKResponse;
 import com.betstat.backend.utilities.DateUtilities;
+import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.JsoupUtilities;
+import com.betstat.backend.utilities.UtilitiesConstant;
 import com.betstat.backend.utilities.UtilitiesConstantProperties;
 
 @Component
@@ -38,7 +47,25 @@ public class ServicesCoupon {
 	@Value("${" + UtilitiesConstantProperties.COUPON_TIPO_CLASS + "}")
 	private String coupontTipo;
 
-	public void readCouponFromHtml(String path, String nameFile) {
+	@Value("${" + UtilitiesConstantProperties.COUPON_EVENT_CONTAINER + "}")
+	private String couponEventContainer;
+
+	@Value("${" + UtilitiesConstantProperties.COUPON_LABEL_EVENT_NAME + "}")
+	private String couponLabelEventName;
+
+	@Value("${" + UtilitiesConstantProperties.COUPON_MATCH_SELECTION + "}")
+	private String coupontMatchSelection;
+
+	@Value("${" + UtilitiesConstantProperties.COUPON_EVENT_DATE + "}")
+	private String coupontEventDate;
+
+	@Value("${" + UtilitiesConstantProperties.COUPON_MARKET_NAME + "}")
+	private String couponMarketName;
+
+	@Value("${" + UtilitiesConstantProperties.COUPON_RESULT_CLASS + "}")
+	private String couponResultClass;
+
+	public ModelResponse readCouponFromHtml(String path, String nameFile) {
 		logger.info("START readSourcePageHtml");
 		StringBuilder stringBuilder = new StringBuilder();
 		Coupon coupon = new Coupon();
@@ -54,51 +81,135 @@ public class ServicesCoupon {
 				while ((inputLine = bufferedReader.readLine()) != null) {
 					stringBuilder.append(inputLine);
 				}
+				Document doc = JsoupUtilities.getDocumentElement(stringBuilder.toString());
+
+				// DATA
+				Date data_coupon = DateUtilities.elaborateDate(doc.getElementsByClass(couponDataClass).text());
+				coupon.setData_coupon(data_coupon);
+
+				// CODICE COUPON
+				String cod_coupon = doc.getElementsByClass(couponCodCouponClass).text();
+				coupon.setId_coupon(cod_coupon);
+
+				// TIPO COUPON
+				String tipo_coupon = doc.getElementsByClass(coupontTipo).get(0).text();
+				coupon.setTipo(new Tipo("", tipo_coupon));
+
+				// ESITO
+				String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
+						.replaceAll("fiber_manual_record", "");
+				coupon.setEsito(new Esito("", esito_coupon));
+
+				// IMPORTO
+				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
+						.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
+				coupon.setImporto(importo);
+
+				Elements elements = doc.getElementsByClass(couponEventContainer);
+
+				DettaglioCoupon dettaglioCouponPrec = new DettaglioCoupon();
+
+				List<DettaglioCoupon> listDettaglioCoupon = new ArrayList<DettaglioCoupon>();
+
+				for (Element element : elements) {
+					if (!element.getElementsByClass(couponLabelEventName).isEmpty()) {
+						dettaglioCouponPrec = separateCod(element.getElementsByClass(couponLabelEventName).text());
+						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
+						if (pronostico.equalsIgnoreCase(UtilitiesConstant.OVER)
+								|| pronostico.equalsIgnoreCase(UtilitiesConstant.UNDER)) {
+							pronostico = pronostico + " "
+									+ element.getElementsByClass(couponMarketName).text().split("\\(")[0]
+											.split("\\)")[0];
+						}
+						dettaglioCouponPrec.setPronostico(new Pronostico("", pronostico));
+						dettaglioCouponPrec.setData_dettaglio_coupon(
+								DateUtilities.elaborateDate(element.getElementsByClass(coupontEventDate).text()));
+						dettaglioCouponPrec.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
+						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
+						dettaglioCouponPrec.setEsito(new Esito("", esito));
+						listDettaglioCoupon.add(dettaglioCouponPrec);
+					} else {
+						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
+						if (pronostico.equalsIgnoreCase(UtilitiesConstant.OVER)
+								|| pronostico.equalsIgnoreCase(UtilitiesConstant.UNDER)) {
+							pronostico = pronostico + " "
+									+ element.getElementsByClass(couponMarketName).text().split("\\(")[1]
+											.split("\\)")[0];
+						}
+						DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
+						dettaglioCoupon.setSquadra_casa(dettaglioCouponPrec.getSquadra_casa());
+						dettaglioCoupon.setSquadra_ospite(dettaglioCouponPrec.getSquadra_ospite());
+						dettaglioCoupon.setData_dettaglio_coupon(dettaglioCoupon.getData_dettaglio_coupon());
+						dettaglioCoupon.setId_evento(dettaglioCoupon.getId_evento());
+						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
+						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
+						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
+						dettaglioCoupon.setEsito(new Esito("", esito));
+						listDettaglioCoupon.add(dettaglioCoupon);
+					}
+				}
+				coupon.setListDettaglioCoupon(listDettaglioCoupon);
+				OKResponse okResponse = new OKResponse();
+				okResponse.setDescription(GsonUtilities.getStringFromCoupon(coupon));
+				return okResponse;
 			}
 		} catch (Exception exception) {
-
-		}
-
-		Document doc = JsoupUtilities.getDocumentElement(stringBuilder.toString());
-
-		// DATA
-		Date data_coupon = DateUtilities.elaborateDate(doc.getElementsByClass(couponDataClass).text());
-		coupon.setData_coupon(data_coupon);
-
-		// CODICE COUPON
-		String cod_coupon = doc.getElementsByClass(couponCodCouponClass).text();
-		coupon.setId_coupon(cod_coupon);
-
-		// TIPO COUPON
-		String tipo_coupon = doc.getElementsByClass(coupontTipo).get(0).text();
-		coupon.setTipo(new Tipo("", tipo_coupon));
-
-		// ESITO
-		String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text();
-		coupon.setEsito(new Esito("", esito_coupon));
-
-		Elements elements = doc.getElementsByClass("event-container");
-
-		String prec = "";
-		for (Element element : elements) {
-			if (!element.getElementsByClass("label event-name").isEmpty()) {
-				prec = element.getElementsByClass("label event-name").text();
-				System.out.println(element.getElementsByClass("label event-name").text() + " "
-						+ element.getElementsByClass("match-selection").text());
+			ERRORResponse errorResponse = new ERRORResponse();
+			if (exception.getMessage() != null) {
+				errorResponse.setDescription(exception.getMessage());
 			} else {
-				System.out.println(prec + " " + element.getElementsByClass("match-selection").text());
-
+				errorResponse.setDescription(exception.getCause().toString());
 			}
 
+			return errorResponse;
 		}
 
-//		String prova1 = doc.getElementsByClass("label event-name").get(0).text();
-//		doc.getElementsByClass("label event-name").p
+	}
 
-		System.out.println(coupon.toString());
+	/**
+	 * Separa il codice dalla squadra e crea il Dettaglio Coupon
+	 * 
+	 * @param input stringa Codice Squadra - squadra
+	 * @return DettaglioCoupon
+	 */
+	private DettaglioCoupon separateCod(String input) {
+		DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
+		// cerca lo spazio bianco che separa il codice dalla squadra di casa
+		int positionWhiteSpace = input.indexOf(" ");
+		String cod_event = input.substring(0, positionWhiteSpace);
+		cod_event = cod_event.replaceAll("\\s+", "");
+		dettaglioCoupon.setId_evento(cod_event);
+		String squadreNoCodEvent = input.substring(positionWhiteSpace, input.length());
+		dettaglioCoupon.setSquadra_casa(new Squadra("", squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
+		dettaglioCoupon.setSquadra_ospite(new Squadra("", squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
+		return dettaglioCoupon;
+	}
 
-//		OKResponse okResponse = new OKResponse();
-////		if(okResponse instanceof OKResponse.class)
-//		return okResponse;
+	/**
+	 * Acquisisce la quota dalla stringa
+	 *
+	 * @param input [q 1,73] GG
+	 * @return quota
+	 */
+	private float getQuota(String input) {
+		String quotaString = input.split("]")[0].replaceAll("\\[q ", "").replaceAll(",", ".");
+		return Float.parseFloat(quotaString);
+	}
+
+	private String getResult(String result) {
+		switch (result) {
+		case UtilitiesConstant.VINCENTE_STYLE: {
+			return UtilitiesConstant.VINCENTE;
+		}
+		case UtilitiesConstant.PERDENTE_STYLE: {
+			return UtilitiesConstant.PERDENTE;
+		}
+		case UtilitiesConstant.INCORSO_STYLE: {
+			return UtilitiesConstant.INCORSO;
+		}
+		default: {
+			return UtilitiesConstant.INCORSO;
+		}
+		}
 	}
 }
