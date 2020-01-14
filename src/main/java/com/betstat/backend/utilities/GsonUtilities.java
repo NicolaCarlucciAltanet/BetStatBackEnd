@@ -1,6 +1,6 @@
 package com.betstat.backend.utilities;
 
-import com.betstat.backend.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.Coupon;
 import com.google.gson.Gson;
 
 public class GsonUtilities {

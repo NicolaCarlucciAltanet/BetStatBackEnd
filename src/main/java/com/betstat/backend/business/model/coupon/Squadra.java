@@ -1,4 +1,4 @@
-package com.betstat.backend.model.coupon;
+package com.betstat.backend.business.model.coupon;
 
 public class Squadra {
 

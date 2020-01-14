@@ -1,10 +1,10 @@
-package com.betstat.backend.model.response;
+package com.betstat.backend.business.model.response;
 
 import com.betstat.backend.utilities.UtilitiesConstant;
 
-public class ERRORResponse extends ModelResponse {
-	
-	private final String type = UtilitiesConstant.ERROR_RESPONSE;
+public class OKResponse extends ModelResponse {
+
+	private final String type = UtilitiesConstant.OK_RESPONSE;
 
 	private String description;
 

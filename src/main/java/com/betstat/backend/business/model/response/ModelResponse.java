@@ -1,4 +1,4 @@
-package com.betstat.backend.model.response;
+package com.betstat.backend.business.model.response;
 
 public abstract class ModelResponse {
 

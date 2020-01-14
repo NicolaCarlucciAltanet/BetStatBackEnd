@@ -1,0 +1,2 @@
+2020-01-14 16:41:23,475 ERROR c.b.b.d.ConfigDao [http-nio-9797-exec-1] java.sql.SQLException: No suitable driver found for jdbc:mysql://localhost/betstatdb
+2020-01-14 16:49:53,076 ERROR c.b.b.d.ConfigDao [http-nio-9797-exec-1] java.sql.SQLException: The server time zone value 'ora solare Europa occidentale' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the serverTimezone configuration property) to use a more specifc time zone value if you want to utilize time zone support.

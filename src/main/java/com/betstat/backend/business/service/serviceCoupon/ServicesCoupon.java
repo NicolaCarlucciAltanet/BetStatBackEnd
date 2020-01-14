@@ -1,4 +1,4 @@
-package com.betstat.backend.business;
+package com.betstat.backend.business.service.serviceCoupon;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,16 +17,16 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.DettaglioCoupon;
+import com.betstat.backend.business.model.coupon.Esito;
+import com.betstat.backend.business.model.coupon.Pronostico;
+import com.betstat.backend.business.model.coupon.Squadra;
+import com.betstat.backend.business.model.coupon.Tipo;
+import com.betstat.backend.business.model.response.ERRORResponse;
+import com.betstat.backend.business.model.response.ModelResponse;
+import com.betstat.backend.business.model.response.OKResponse;
 import com.betstat.backend.controller.coupon.CouponController;
-import com.betstat.backend.model.coupon.Coupon;
-import com.betstat.backend.model.coupon.DettaglioCoupon;
-import com.betstat.backend.model.coupon.Esito;
-import com.betstat.backend.model.coupon.Pronostico;
-import com.betstat.backend.model.coupon.Squadra;
-import com.betstat.backend.model.coupon.Tipo;
-import com.betstat.backend.model.response.ERRORResponse;
-import com.betstat.backend.model.response.ModelResponse;
-import com.betstat.backend.model.response.OKResponse;
 import com.betstat.backend.utilities.DateUtilities;
 import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.JsoupUtilities;

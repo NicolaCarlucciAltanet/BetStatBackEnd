@@ -15,6 +15,9 @@ public class UtilitiesConstantProperties {
 		public static final String DB_URL = "db.url";
 		
 		public static final String DB_PASSWORD = "db.password.db";
+		
+		public static final String DB_ROOT = "db.user.db";
+
 
 	// -----------------COUPON_______________________________________
 

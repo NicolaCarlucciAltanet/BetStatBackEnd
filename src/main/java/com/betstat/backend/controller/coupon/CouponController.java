@@ -8,11 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.betstat.backend.business.ServicesCoupon;
+import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.response.ModelResponse;
+import com.betstat.backend.business.model.response.OKResponse;
+import com.betstat.backend.business.service.serviceCoupon.ServicesCoupon;
 import com.betstat.backend.dao.ConfigDao;
-import com.betstat.backend.model.coupon.Coupon;
-import com.betstat.backend.model.response.ModelResponse;
-import com.betstat.backend.model.response.OKResponse;
 import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.UtilitiesConstantProperties;
 
@@ -31,6 +31,16 @@ public class CouponController {
 	@Value("${" + UtilitiesConstantProperties.DB_STRING_CONNECTION + "}")
 	private String dbStringConnection;
 
+	@Value("${" + UtilitiesConstantProperties.DB_URL + "}")
+	private String dbUrl;
+
+	@Value("${" + UtilitiesConstantProperties.DB_PASSWORD + "}")
+	private String dbPassword;
+	
+	@Value("${" + UtilitiesConstantProperties.DB_ROOT + "}")
+	private String dbRoot;
+
+	
 	@Autowired
 	ServicesCoupon serviceCoupon;
 
@@ -46,8 +56,8 @@ public class CouponController {
 		} else {
 			logger.error(modelResponse.getDescription());
 		}
-		ConfigDao configDao = new ConfigDao();
-		configDao.loadDrivers(dbStringConnection);
+		ConfigDao.loadDrivers(dbStringConnection);
+		ConfigDao.openConnection(dbUrl, dbRoot, dbPassword);
 		logger.info("END readcouponController");
 	}
 
