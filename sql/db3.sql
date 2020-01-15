@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `coupon`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `coupon` (
-  `id_coupon` int(11) NOT NULL AUTO_INCREMENT,
+  `id_coupon` varchar(30) NOT NULL,
   `data_coupon` datetime NOT NULL,
   `id_tipo` int(11) NOT NULL,
   `id_esito` int(11) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE `dettaglio_coupon` (
   `data_dettaglio_coupon` datetime NOT NULL,
   `id_squadra_casa` int(11) NOT NULL,
   `id_squadra_ospite` int(11) NOT NULL,
-  `id_coupon` int(11) NOT NULL,
+  `id_coupon` varchar(30) NOT NULL,
   `id_evento` int(11) NOT NULL,
   `id_pronostico` int(11) NOT NULL,
   `quota` float NOT NULL,

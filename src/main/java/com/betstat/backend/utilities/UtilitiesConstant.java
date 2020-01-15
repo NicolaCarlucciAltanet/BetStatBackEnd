@@ -1,6 +1,9 @@
 package com.betstat.backend.utilities;
 
 public class UtilitiesConstant {
+	
+	public static final int UNDEFINED = -1;
+
 
 	// -----------------RESPONSE_______________________________________
 

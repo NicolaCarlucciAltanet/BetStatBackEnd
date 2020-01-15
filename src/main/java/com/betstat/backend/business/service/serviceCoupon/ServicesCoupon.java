@@ -93,7 +93,7 @@ public class ServicesCoupon {
 
 				// TIPO COUPON
 				String tipo_coupon = doc.getElementsByClass(coupontTipo).get(0).text();
-				coupon.setTipo(new Tipo("", tipo_coupon));
+				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED, tipo_coupon));
 
 				// ESITO
 				String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()

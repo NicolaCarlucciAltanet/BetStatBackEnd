@@ -12,7 +12,7 @@ import com.betstat.backend.business.model.coupon.Coupon;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
 import com.betstat.backend.business.service.serviceCoupon.ServicesCoupon;
-import com.betstat.backend.dao.ConfigDao;
+import com.betstat.backend.business.service.serviceCouponDao.ServiceCouponDao;
 import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.UtilitiesConstantProperties;
 
@@ -28,19 +28,9 @@ public class CouponController {
 	@Value("${" + UtilitiesConstantProperties.FILE_PATH + "}")
 	private String filePath;
 
-	@Value("${" + UtilitiesConstantProperties.DB_STRING_CONNECTION + "}")
-	private String dbStringConnection;
+	@Autowired
+	ServiceCouponDao serviceCouponDao;
 
-	@Value("${" + UtilitiesConstantProperties.DB_URL + "}")
-	private String dbUrl;
-
-	@Value("${" + UtilitiesConstantProperties.DB_PASSWORD + "}")
-	private String dbPassword;
-	
-	@Value("${" + UtilitiesConstantProperties.DB_ROOT + "}")
-	private String dbRoot;
-
-	
 	@Autowired
 	ServicesCoupon serviceCoupon;
 
@@ -53,11 +43,12 @@ public class CouponController {
 			logger.info(modelResponse.getDescription());
 			Coupon coupon = GsonUtilities.getCouponFromString(modelResponse.getDescription());
 			logger.info(coupon.toString());
+			serviceCouponDao.getCoupon(coupon.getId_coupon());
+			serviceCouponDao.insertCoupon(coupon);
 		} else {
 			logger.error(modelResponse.getDescription());
 		}
-		ConfigDao.loadDrivers(dbStringConnection);
-		ConfigDao.openConnection(dbUrl, dbRoot, dbPassword);
+
 		logger.info("END readcouponController");
 	}
 
