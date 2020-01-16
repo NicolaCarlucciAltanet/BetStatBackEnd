@@ -1,5 +1,6 @@
 package com.betstat.backend.utilities;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,15 +12,18 @@ public class DateUtilities {
 
 	final static Logger logger = LogManager.getLogger(DateUtilities.class);
 
-	public static Date getDate_EU_TimeFromString(String dateTimeString) {
+	public static Timestamp getDate_EU_TimeFromString(String dateTimeString) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Date date = null;
+		Timestamp fromTS1=null;
 		try {
 			date = simpleDateFormat.parse(dateTimeString);
+			fromTS1 = new Timestamp(date.getTime());
+
 		} catch (ParseException parseException) {
 			logger.error(parseException);
 		}
-		return date;
+		return fromTS1;
 	}
 
 	public static Date getDate_USA_TimeFromString(String dateTimeString) {
@@ -55,12 +59,16 @@ public class DateUtilities {
 		}
 	}
 
-	public static Date elaborateDate(String dateG) {
+	public static Timestamp elaborateDate(String dateG) {
 		// rimuove gli spazi bianchi
 		String dateNoSpace = dateG.replaceAll("\\s+", "");
 		// al posto della virgola mette uno spazio
 		String dateNoComma = dateNoSpace.replaceAll(",", " ");
-		return getDate_USA_TimeFromString(dateNoComma);
+		return getDate_EU_TimeFromString(dateNoComma);
+	}
+
+	public static java.sql.Date toSlqDate(Date utilDate) {
+		return new java.sql.Date(utilDate.getTime());
 	}
 
 }

@@ -96,12 +96,12 @@ public class ServicesCoupon {
 				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED, tipo_coupon));
 
 				// ESITO
-				String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
-						.replaceAll("fiber_manual_record", "");
-				coupon.setEsito(new Esito("", esito_coupon));
+				String esito_coupon = doc.getElementsByClass("data-value tipoc ng-star-inserted").get(0).text()
+						.replaceAll("fiber_manual_record", "").replaceAll(" ","");
+				coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito_coupon));
 
 				// IMPORTO
-				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
+				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(2).text()
 						.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
 				coupon.setImporto(importo);
 
@@ -126,7 +126,7 @@ public class ServicesCoupon {
 								DateUtilities.elaborateDate(element.getElementsByClass(coupontEventDate).text()));
 						dettaglioCouponPrec.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-						dettaglioCouponPrec.setEsito(new Esito("", esito));
+						dettaglioCouponPrec.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito));
 						listDettaglioCoupon.add(dettaglioCouponPrec);
 					} else {
 						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
@@ -144,7 +144,7 @@ public class ServicesCoupon {
 						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
 						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-						dettaglioCoupon.setEsito(new Esito("", esito));
+						dettaglioCoupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito));
 						listDettaglioCoupon.add(dettaglioCoupon);
 					}
 				}

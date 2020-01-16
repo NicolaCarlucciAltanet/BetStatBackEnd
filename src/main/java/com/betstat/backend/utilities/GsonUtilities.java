@@ -1,6 +1,7 @@
 package com.betstat.backend.utilities;
 
 import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.Esito;
 import com.betstat.backend.business.model.coupon.Tipo;
 import com.google.gson.Gson;
 
@@ -48,6 +49,28 @@ public class GsonUtilities {
 	public static String getStringFromTipo(Tipo tipo) {
 		Gson gson = new Gson();
 		return gson.toJson(tipo);
+	}
+
+	/**
+	 * Converte una stringa in un oggetto di tipo Esito
+	 * 
+	 * @param tipoString
+	 * @return Tipo
+	 */
+	public static Esito getEsitoFromString(String esitoString) {
+		Gson gson = new Gson();
+		return gson.fromJson(esitoString, Esito.class);
+	}
+
+	/**
+	 * Converte un oggetto di tipo Esito in json
+	 * 
+	 * @param esito
+	 * @return json del Esito
+	 */
+	public static String getStringFromTipo(Esito esito) {
+		Gson gson = new Gson();
+		return gson.toJson(esito);
 	}
 
 }

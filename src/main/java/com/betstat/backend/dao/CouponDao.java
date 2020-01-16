@@ -9,10 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.Esito;
 import com.betstat.backend.business.model.coupon.Tipo;
 import com.betstat.backend.business.model.response.ERRORResponse;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
+import com.betstat.backend.utilities.DateUtilities;
 import com.betstat.backend.utilities.ExceptionMessage;
 import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.UtilitiesConstant;
@@ -99,9 +101,10 @@ public class CouponDao {
 		Connection connection = getConnection();
 		ResultSet resultSet = null;
 		if (connection != null) {
-			// String query = " Select * from coupon where id_coupon = '" + codCoupon + "'";
-			String query = "INSERT INTO coupon VALUES ('" + coupon.getId_coupon() + "'," + coupon.getData_coupon()
-					+ ")";
+			String query = "INSERT INTO coupon VALUES ('" + coupon.getId_coupon() + "',"
+					+coupon.getData_coupon() + ","
+					+ coupon.getTipo().getId_tipo() + "," + coupon.getEsito().getId_esito() + "," + null + ","
+					+ coupon.getImporto() + "," + coupon.getVincita() + ")";
 			Statement statement = ConfigDao.getStatement(connection);
 			if (statement != null) {
 				try {
@@ -187,6 +190,12 @@ public class CouponDao {
 		}
 	}
 
+	/**
+	 * Inserisce un nuovo tipo dato il suo nome
+	 * 
+	 * @param nomeTipo
+	 * @return ModelResponse
+	 */
 	public ModelResponse insertTipo(String nomeTipo) {
 		logger.info("inserimento nuovo tipo :" + nomeTipo);
 		Connection connection = getConnection();
@@ -198,6 +207,93 @@ public class CouponDao {
 					logger.info("Esecuzione della query :" + query);
 					statement.executeUpdate(query);
 					logger.info("inserimento tipo :" + nomeTipo + " completato");
+					OKResponse oKResponse = new OKResponse();
+					return oKResponse;
+				} catch (SQLException sQLException) {
+					ERRORResponse eRRORResponse = ExceptionMessage.getMessageExceptionModelResponse(sQLException);
+					logger.error(eRRORResponse.getDescription());
+					return eRRORResponse;
+				} finally {
+					ConfigDao.closeResultSetAndConnection(statement, connection);
+				}
+			} else {
+				ERRORResponse eRRORResponseSt = new ERRORResponse();
+				eRRORResponseSt.setDescription("statement null");
+				return eRRORResponseSt;
+			}
+		} else {
+			ERRORResponse eRRORResponseC = new ERRORResponse();
+			eRRORResponseC.setDescription("statement null");
+			return eRRORResponseC;
+		}
+	}
+
+	/**
+	 * Restituisce il ModelResponse di un Esito dato il suo nome
+	 * 
+	 * @param nomeEsito
+	 * @return ModelResponse o null se non esiste
+	 */
+	public ModelResponse getIdEsito(String nomeEsito) {
+		logger.info("Ricerca id per l'esito :" + nomeEsito);
+		Connection connection = getConnection();
+		ResultSet resultSet = null;
+		if (connection != null) {
+			String query = " Select id_esito from esito where nome_esito = '" + nomeEsito + "'";
+			Statement statement = ConfigDao.getStatement(connection);
+			if (statement != null) {
+				try {
+					int id_esito = UtilitiesConstant.UNDEFINED;
+					logger.info("Esecuzione della query :" + query);
+					resultSet = statement.executeQuery(query);
+
+					while (resultSet.next()) {
+						id_esito = resultSet.getInt("id_esito");
+					}
+					if (id_esito == UtilitiesConstant.UNDEFINED) {
+						return null;
+					} else {
+						Esito esito = new Esito(id_esito, nomeEsito);
+						OKResponse oKResponse = new OKResponse();
+						oKResponse.setDescription(GsonUtilities.getStringFromTipo(esito));
+						return oKResponse;
+					}
+				} catch (SQLException sQLException) {
+					ERRORResponse eRRORResponse = ExceptionMessage.getMessageExceptionModelResponse(sQLException);
+					logger.error(eRRORResponse.getDescription());
+					return eRRORResponse;
+				} finally {
+					ConfigDao.closeResultSetAndConnection(resultSet, statement, connection);
+				}
+			} else {
+				ERRORResponse eRRORResponseSt = new ERRORResponse();
+				eRRORResponseSt.setDescription("statement null");
+				return eRRORResponseSt;
+			}
+		} else {
+			ERRORResponse eRRORResponseC = new ERRORResponse();
+			eRRORResponseC.setDescription("statement null");
+			return eRRORResponseC;
+		}
+	}
+
+	/**
+	 * Inserisce un nuovo Esito dato il suo nome
+	 * 
+	 * @param nomeTipo
+	 * @return ModelResponse
+	 */
+	public ModelResponse insertEsito(String nomeEsito) {
+		logger.info("inserimento nuovo esito :" + nomeEsito);
+		Connection connection = getConnection();
+		if (connection != null) {
+			String query = " INSERT INTO esito (nome_esito) VALUES ('" + nomeEsito + "')";
+			Statement statement = ConfigDao.getStatement(connection);
+			if (statement != null) {
+				try {
+					logger.info("Esecuzione della query :" + query);
+					statement.executeUpdate(query);
+					logger.info("inserimento esito :" + nomeEsito + " completato");
 					OKResponse oKResponse = new OKResponse();
 					return oKResponse;
 				} catch (SQLException sQLException) {
