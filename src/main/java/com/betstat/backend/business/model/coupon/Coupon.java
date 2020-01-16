@@ -1,5 +1,6 @@
 package com.betstat.backend.business.model.coupon;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -7,7 +8,7 @@ public class Coupon {
 
 	private String id_coupon;
 
-	private Date data_coupon;
+	private Timestamp data_coupon;
 
 	private Tipo tipo;
 
@@ -25,7 +26,7 @@ public class Coupon {
 
 	}
 
-	public Coupon(String id_coupon, Date data_coupon, Tipo tipo, Esito esito, Utente utente, float importo,
+	public Coupon(String id_coupon, Timestamp data_coupon, Tipo tipo, Esito esito, Utente utente, float importo,
 			float vincita, List<DettaglioCoupon> listDettaglioCoupon) {
 		this.id_coupon = id_coupon;
 		this.data_coupon = data_coupon;
@@ -45,11 +46,11 @@ public class Coupon {
 		this.id_coupon = id_coupon;
 	}
 
-	public Date getData_coupon() {
+	public Timestamp getData_coupon() {
 		return data_coupon;
 	}
 
-	public void setData_coupon(Date data_coupon) {
+	public void setData_coupon(Timestamp data_coupon) {
 		this.data_coupon = data_coupon;
 	}
 

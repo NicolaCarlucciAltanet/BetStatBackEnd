@@ -99,35 +99,25 @@ public class CouponDao {
 	public ModelResponse InsertCopupon(Coupon coupon) {
 		logger.info("Inserimento coupon :" + coupon.getId_coupon());
 		Connection connection = getConnection();
-		ResultSet resultSet = null;
 		if (connection != null) {
-			String query = "INSERT INTO coupon VALUES ('" + coupon.getId_coupon() + "',"
-					+coupon.getData_coupon() + ","
+			String query = "INSERT INTO coupon VALUES ('" + coupon.getId_coupon() + "','" + coupon.getData_coupon() + "',"
 					+ coupon.getTipo().getId_tipo() + "," + coupon.getEsito().getId_esito() + "," + null + ","
 					+ coupon.getImporto() + "," + coupon.getVincita() + ")";
 			Statement statement = ConfigDao.getStatement(connection);
 			if (statement != null) {
 				try {
 					logger.info("Esecuzione della query :" + query);
-					resultSet = statement.executeQuery(query);
-					int i = 0;
-					while (resultSet.next()) {
-						i++;
-					}
-					if (i == 0) {
-						return null;
-						// nessun coupon
+					statement.executeUpdate(query);
 
-					} else {
-						OKResponse oKResponse = new OKResponse();
-						return oKResponse;
-					}
+					OKResponse oKResponse = new OKResponse();
+					return oKResponse;
+
 				} catch (SQLException sQLException) {
 					ERRORResponse eRRORResponse = ExceptionMessage.getMessageExceptionModelResponse(sQLException);
 					logger.error(eRRORResponse.getDescription());
 					return eRRORResponse;
 				} finally {
-					ConfigDao.closeResultSetAndConnection(resultSet, statement, connection);
+					ConfigDao.closeResultSetAndConnection(statement, connection);
 				}
 			} else {
 				ERRORResponse eRRORResponseSt = new ERRORResponse();

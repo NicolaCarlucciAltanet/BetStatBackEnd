@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +84,7 @@ public class ServicesCoupon {
 				Document doc = JsoupUtilities.getDocumentElement(stringBuilder.toString());
 
 				// DATA
-				Date data_coupon = DateUtilities.elaborateDate(doc.getElementsByClass(couponDataClass).text());
+				Timestamp data_coupon = DateUtilities.elaborateDate(doc.getElementsByClass(couponDataClass).text());
 				coupon.setData_coupon(data_coupon);
 
 				// CODICE COUPON
@@ -96,12 +96,12 @@ public class ServicesCoupon {
 				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED, tipo_coupon));
 
 				// ESITO
-				String esito_coupon = doc.getElementsByClass("data-value tipoc ng-star-inserted").get(0).text()
+				String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
 						.replaceAll("fiber_manual_record", "").replaceAll(" ","");
 				coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito_coupon));
 
 				// IMPORTO
-				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(2).text()
+				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
 						.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
 				coupon.setImporto(importo);
 

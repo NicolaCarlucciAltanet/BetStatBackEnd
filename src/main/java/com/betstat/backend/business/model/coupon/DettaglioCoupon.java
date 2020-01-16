@@ -1,5 +1,6 @@
 package com.betstat.backend.business.model.coupon;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class DettaglioCoupon {
@@ -10,7 +11,7 @@ public class DettaglioCoupon {
 
 	private Squadra squadra_ospite;
 
-	private Date data_dettaglio_coupon;
+	private Timestamp data_dettaglio_coupon;
 
 	private String id_evento;
 
@@ -24,7 +25,7 @@ public class DettaglioCoupon {
 	}
 
 	public DettaglioCoupon(String id_dettaglio_coupon, Squadra squadra_casa, Squadra squadra_ospite,
-			Date data_dettaglio_coupon, String id_evento, Pronostico pronostico, float quota, Esito esito) {
+			Timestamp data_dettaglio_coupon, String id_evento, Pronostico pronostico, float quota, Esito esito) {
 		this.id_dettaglio_coupon = id_dettaglio_coupon;
 		this.squadra_casa = squadra_casa;
 		this.squadra_ospite = squadra_ospite;
@@ -59,11 +60,11 @@ public class DettaglioCoupon {
 		this.squadra_ospite = squadra_ospite;
 	}
 
-	public Date getData_dettaglio_coupon() {
+	public Timestamp getData_dettaglio_coupon() {
 		return data_dettaglio_coupon;
 	}
 
-	public void setData_dettaglio_coupon(Date data_dettaglio_coupon) {
+	public void setData_dettaglio_coupon(Timestamp data_dettaglio_coupon) {
 		this.data_dettaglio_coupon = data_dettaglio_coupon;
 	}
 

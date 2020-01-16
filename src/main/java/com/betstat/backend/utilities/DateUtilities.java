@@ -13,7 +13,7 @@ public class DateUtilities {
 	final static Logger logger = LogManager.getLogger(DateUtilities.class);
 
 	public static Timestamp getDate_EU_TimeFromString(String dateTimeString) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 		Date date = null;
 		Timestamp fromTS1=null;
 		try {
@@ -26,38 +26,38 @@ public class DateUtilities {
 		return fromTS1;
 	}
 
-	public static Date getDate_USA_TimeFromString(String dateTimeString) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/mm/dd HH:mm");
-		Date date = null;
-		try {
-			date = simpleDateFormat.parse(dateTimeString);
-		} catch (ParseException parseException) {
-			logger.error(parseException);
-		}
-		return date;
-	}
-
-	public static Date convertDataEUtoUSA(Date dataEU) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		try {
-			String date = simpleDateFormat.format(dataEU);
-			return simpleDateFormat.parse(date);
-		} catch (ParseException parseException) {
-			logger.error(parseException);
-			return null;
-		}
-	}
-
-	public static Date convertDataUSAtoEU(Date dataUSA) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		try {
-			String date = simpleDateFormat.format(dataUSA);
-			return simpleDateFormat.parse(date);
-		} catch (ParseException parseException) {
-			logger.error(parseException);
-			return null;
-		}
-	}
+//	public static Date getDate_USA_TimeFromString(String dateTimeString) {
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/mm/dd HH:mm");
+//		Date date = null;
+//		try {
+//			date = simpleDateFormat.parse(dateTimeString);
+//		} catch (ParseException parseException) {
+//			logger.error(parseException);
+//		}
+//		return date;
+//	}
+//
+//	public static Date convertDataEUtoUSA(Date dataEU) {
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+//		try {
+//			String date = simpleDateFormat.format(dataEU);
+//			return simpleDateFormat.parse(date);
+//		} catch (ParseException parseException) {
+//			logger.error(parseException);
+//			return null;
+//		}
+//	}
+//
+//	public static Date convertDataUSAtoEU(Date dataUSA) {
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//		try {
+//			String date = simpleDateFormat.format(dataUSA);
+//			return simpleDateFormat.parse(date);
+//		} catch (ParseException parseException) {
+//			logger.error(parseException);
+//			return null;
+//		}
+//	}
 
 	public static Timestamp elaborateDate(String dateG) {
 		// rimuove gli spazi bianchi
