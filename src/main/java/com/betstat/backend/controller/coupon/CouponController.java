@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.Utente;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
 import com.betstat.backend.business.service.serviceCoupon.ServicesCoupon;
@@ -37,14 +38,30 @@ public class CouponController {
 	@GetMapping(value = "/readcoupon")
 	public void readcouponController() {
 		logger.info("START readcouponController");
-		// ServicesCoupon serviceCoupon = new ServicesCoupon();
-		ModelResponse modelResponse = serviceCoupon.readCouponFromHtml(filePath, fileName);
+		// mokk Utente
+		Utente utente = new Utente();
+		utente.setId_utente(1);
+		// acquisisce un coupon dall'html
+		ModelResponse modelResponse = serviceCoupon.readCouponFromHtml(filePath, fileName, utente);
 		if (modelResponse instanceof OKResponse) {
 			logger.info(modelResponse.getDescription());
 			Coupon coupon = GsonUtilities.getCouponFromString(modelResponse.getDescription());
 			logger.info(coupon.toString());
-			serviceCouponDao.getCoupon(coupon.getId_coupon());
-			serviceCouponDao.insertCoupon(coupon);
+			ModelResponse modelresponseGetCoupon = serviceCouponDao.getCoupon(coupon.getId_coupon());
+			if (modelresponseGetCoupon == null) {
+				// bisogna inserire il coupon
+				ModelResponse modelResponseInsertCoupon = serviceCouponDao.insertCoupon(coupon);
+				if (modelResponseInsertCoupon instanceof OKResponse) {
+					logger.info("coupon inserito correttamente");
+				} else {
+					logger.error(modelResponseInsertCoupon.getDescription());
+				}
+			} else {
+				// bisogna aggiornare il coupon
+				Coupon oldCoupon = GsonUtilities.getCouponFromString(modelresponseGetCoupon.getDescription());
+
+			}
+
 		} else {
 			logger.error(modelResponse.getDescription());
 		}

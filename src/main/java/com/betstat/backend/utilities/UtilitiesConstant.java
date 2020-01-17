@@ -1,9 +1,10 @@
 package com.betstat.backend.utilities;
 
 public class UtilitiesConstant {
-	
-	public static final int UNDEFINED = -1;
 
+	public static final int UNDEFINED_INT = -1;
+
+	public static final String UNDEFINED_STRING = "UNDEFINED";
 
 	// -----------------RESPONSE_______________________________________
 

@@ -1,8 +1,10 @@
 package com.betstat.backend.business.model.coupon;
 
+import java.sql.Timestamp;
+
 public class Utente {
 
-	private String id_utente;
+	private int id_utente;
 
 	private String nome_utente;
 
@@ -14,9 +16,9 @@ public class Utente {
 
 	private String token_utente;
 
-	private String token_validate_utente;
+	private boolean token_validate_utente;
 
-	private String last_access_utente;
+	private Timestamp last_access_utente;
 
 	private String password_utente;
 
@@ -24,9 +26,13 @@ public class Utente {
 
 	private String telefono_utente;
 
-	public Utente(String id_utente, String nome_utente, String cognome_utente, String cf_utente, String email_utente,
-			String token_utente, String token_validate_utente, String last_access_utente, String password_utente,
+	public Utente() {
+	}
+
+	public Utente(int id_utente, String nome_utente, String cognome_utente, String cf_utente, String email_utente,
+			String token_utente, boolean token_validate_utente, Timestamp last_access_utente, String password_utente,
 			String indirizzo_utente, String telefono_utente) {
+		super();
 		this.id_utente = id_utente;
 		this.nome_utente = nome_utente;
 		this.cognome_utente = cognome_utente;
@@ -40,11 +46,11 @@ public class Utente {
 		this.telefono_utente = telefono_utente;
 	}
 
-	public String getId_utente() {
+	public int getId_utente() {
 		return id_utente;
 	}
 
-	public void setId_utente(String id_utente) {
+	public void setId_utente(int id_utente) {
 		this.id_utente = id_utente;
 	}
 
@@ -88,19 +94,19 @@ public class Utente {
 		this.token_utente = token_utente;
 	}
 
-	public String getToken_validate_utente() {
+	public boolean isToken_validate_utente() {
 		return token_validate_utente;
 	}
 
-	public void setToken_validate_utente(String token_validate_utente) {
+	public void setToken_validate_utente(boolean token_validate_utente) {
 		this.token_validate_utente = token_validate_utente;
 	}
 
-	public String getLast_access_utente() {
+	public Timestamp getLast_access_utente() {
 		return last_access_utente;
 	}
 
-	public void setLast_access_utente(String last_access_utente) {
+	public void setLast_access_utente(Timestamp last_access_utente) {
 		this.last_access_utente = last_access_utente;
 	}
 
@@ -126,6 +132,15 @@ public class Utente {
 
 	public void setTelefono_utente(String telefono_utente) {
 		this.telefono_utente = telefono_utente;
+	}
+
+	@Override
+	public String toString() {
+		return "Utente [id_utente=" + id_utente + ", nome_utente=" + nome_utente + ", cognome_utente=" + cognome_utente
+				+ ", cf_utente=" + cf_utente + ", email_utente=" + email_utente + ", token_utente=" + token_utente
+				+ ", token_validate_utente=" + token_validate_utente + ", last_access_utente=" + last_access_utente
+				+ ", password_utente=" + password_utente + ", indirizzo_utente=" + indirizzo_utente
+				+ ", telefono_utente=" + telefono_utente + "]";
 	}
 
 }

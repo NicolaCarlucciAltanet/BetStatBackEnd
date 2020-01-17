@@ -33,17 +33,22 @@ public class ServiceCouponDao {
 
 	final static Logger logger = LogManager.getLogger(ServiceCouponDao.class);
 
-	public void getCoupon(String id_coupon) {
+	/**
+	 * Chiama il servizio dao couponDao.getCopupon per cercare il coupon con id
+	 * id_coupon
+	 * 
+	 * @param id_coupon
+	 * @return null se il coupon non esiste
+	 */
+	public ModelResponse getCoupon(String id_coupon) {
 		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
 		ModelResponse modelResonse = couponDao.getCopupon(id_coupon);
 		if (modelResonse != null) {
-			if (modelResonse instanceof ERRORResponse) {
-				ERRORResponse eRRORResponse = (ERRORResponse) couponDao.getCopupon(id_coupon);
-				logger.error(eRRORResponse.getDescription());
-			}
+			return modelResonse;
 		} else {
 			// nessun coupon bisogna inserirlo
 			logger.info("nessun coupon restituito con il codice :" + id_coupon);
+			return null;
 		}
 	}
 
@@ -53,7 +58,7 @@ public class ServiceCouponDao {
 		boolean errors = false;
 		String errorString = "";
 		Tipo tipo = coupon.getTipo();
-		if (tipo.getId_tipo() == UtilitiesConstant.UNDEFINED) {
+		if (tipo.getId_tipo() == UtilitiesConstant.UNDEFINED_INT) {
 			ModelResponse modelResonse = getTipo(tipo.getNome_tipo());
 			if (modelResonse != null) {
 				if (modelResonse instanceof OKResponse) {
@@ -82,7 +87,7 @@ public class ServiceCouponDao {
 		}
 
 		Esito esito = coupon.getEsito();
-		if (esito.getId_esito() == UtilitiesConstant.UNDEFINED) {
+		if (esito.getId_esito() == UtilitiesConstant.UNDEFINED_INT) {
 			ModelResponse modelResonse = getEsito(esito.getNome_esito());
 			if (modelResonse != null) {
 				if (modelResonse instanceof OKResponse) {
@@ -96,7 +101,7 @@ public class ServiceCouponDao {
 				}
 			} else {
 				// nessun tipo, inserirlo
-				logger.info("nessun rsito restituito con il nome :" + esito.getNome_esito());
+				logger.info("nessun esito restituito con il nome :" + esito.getNome_esito());
 				ModelResponse modelWriteEsito = writeNewEsito(esito.getNome_esito());
 				if (modelWriteEsito instanceof OKResponse) {
 					ModelResponse newEsitoResponse = getEsito(esito.getNome_esito());
@@ -132,6 +137,18 @@ public class ServiceCouponDao {
 	}
 
 	/**
+	 * Restituisce il Tipo dato il id
+	 * 
+	 * @param nome_tipo
+	 * @return ModelResponse
+	 */
+	public ModelResponse getTipo(int id_tipo) {
+		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
+		ModelResponse modelResonse = couponDao.getNomeTipo(id_tipo);
+		return modelResonse;
+	}
+
+	/**
 	 * Inserisce un nuovo tipo dato il suo nome
 	 * 
 	 * @param nome_tipo
@@ -144,7 +161,7 @@ public class ServiceCouponDao {
 	}
 
 	/**
-	 * Restituisce il Tipo dato il suo nome
+	 * Restituisce l'esito dato il suo nome
 	 * 
 	 * @param nome_esito
 	 * @return ModelResponse
@@ -156,7 +173,19 @@ public class ServiceCouponDao {
 	}
 
 	/**
-	 * Inserisce un nuovo tipo dato il suo nome
+	 * Restituisce l'esito dato il suo id
+	 * 
+	 * @param nome_esito
+	 * @return ModelResponse
+	 */
+	public ModelResponse getEsito(int id_esito) {
+		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
+		ModelResponse modelResonse = couponDao.getNomeEsito(id_esito);
+		return modelResonse;
+	}
+
+	/**
+	 * Inserisce un nuovo Esito dato il suo nome
 	 * 
 	 * @param nome_esito
 	 * @return ModelResponse

@@ -23,6 +23,7 @@ import com.betstat.backend.business.model.coupon.Esito;
 import com.betstat.backend.business.model.coupon.Pronostico;
 import com.betstat.backend.business.model.coupon.Squadra;
 import com.betstat.backend.business.model.coupon.Tipo;
+import com.betstat.backend.business.model.coupon.Utente;
 import com.betstat.backend.business.model.response.ERRORResponse;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
@@ -65,7 +66,7 @@ public class ServicesCoupon {
 	@Value("${" + UtilitiesConstantProperties.COUPON_RESULT_CLASS + "}")
 	private String couponResultClass;
 
-	public ModelResponse readCouponFromHtml(String path, String nameFile) {
+	public ModelResponse readCouponFromHtml(String path, String nameFile, Utente utente) {
 		logger.info("START readSourcePageHtml");
 		StringBuilder stringBuilder = new StringBuilder();
 		Coupon coupon = new Coupon();
@@ -83,6 +84,9 @@ public class ServicesCoupon {
 				}
 				Document doc = JsoupUtilities.getDocumentElement(stringBuilder.toString());
 
+				// UTENTE
+				coupon.setUtente(utente);
+
 				// DATA
 				Timestamp data_coupon = DateUtilities.elaborateDate(doc.getElementsByClass(couponDataClass).text());
 				coupon.setData_coupon(data_coupon);
@@ -93,17 +97,29 @@ public class ServicesCoupon {
 
 				// TIPO COUPON
 				String tipo_coupon = doc.getElementsByClass(coupontTipo).get(0).text();
-				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED, tipo_coupon));
+				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED_INT, tipo_coupon));
 
-				// ESITO
-				String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
-						.replaceAll("fiber_manual_record", "").replaceAll(" ","");
-				coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito_coupon));
+				try {
+					// ESITO
+					String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
+							.replaceAll("fiber_manual_record", "").replaceAll(" ", "");
+					coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito_coupon));
 
-				// IMPORTO
-				float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
-						.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
-				coupon.setImporto(importo);
+					// IMPORTO
+					float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
+							.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
+					coupon.setImporto(importo);
+				} catch (Exception exception) {
+					// ESITO
+					String esito_coupon = doc.getElementsByClass("data-value tipoc ng-star-inserted").get(0).text()
+							.replaceAll("fiber_manual_record", "").replaceAll(" ", "");
+					coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito_coupon));
+
+					// IMPORTO
+					float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(2).text()
+							.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
+					coupon.setImporto(importo);
+				}
 
 				Elements elements = doc.getElementsByClass(couponEventContainer);
 
@@ -126,7 +142,7 @@ public class ServicesCoupon {
 								DateUtilities.elaborateDate(element.getElementsByClass(coupontEventDate).text()));
 						dettaglioCouponPrec.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-						dettaglioCouponPrec.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito));
+						dettaglioCouponPrec.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito));
 						listDettaglioCoupon.add(dettaglioCouponPrec);
 					} else {
 						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
@@ -144,7 +160,7 @@ public class ServicesCoupon {
 						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
 						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
-						dettaglioCoupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED, esito));
+						dettaglioCoupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito));
 						listDettaglioCoupon.add(dettaglioCoupon);
 					}
 				}
