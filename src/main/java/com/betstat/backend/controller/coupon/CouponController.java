@@ -69,4 +69,41 @@ public class CouponController {
 		logger.info("END readcouponController");
 	}
 
+	@GetMapping(value = "/a")
+	public void a() {
+
+		int n = 99;
+
+		while (true) {
+			for (int k = 0; k <= n; k++) {
+				System.out.println("ciclo :" + k);
+				for (int i = n; i >= k; i--) {
+					if (i == n) {
+						stampa(k, i - 1, i);
+					} else {
+						int j = i;
+						int pos = i;
+						if (j == k) {
+							stampa(k, (pos - 1), j);
+						} else {
+							while (j <= n) {
+								stampa(k, (pos - 1), j);
+								j++;
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	private void stampa(int prtenza, int indice, int numero) {
+		String prec = "";
+		for (int i = prtenza; i <= indice; i++) {
+			prec = prec + " " + i + " ";
+		}
+		System.out.println(prec + " " + numero);
+	}
+
 }
