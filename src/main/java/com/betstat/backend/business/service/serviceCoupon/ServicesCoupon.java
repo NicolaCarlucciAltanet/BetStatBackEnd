@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +28,10 @@ import com.betstat.backend.business.model.coupon.Utente;
 import com.betstat.backend.business.model.response.ERRORResponse;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
+import com.betstat.backend.business.service.serviceCouponDao.ServiceCouponDao;
 import com.betstat.backend.controller.coupon.CouponController;
 import com.betstat.backend.utilities.DateUtilities;
+import com.betstat.backend.utilities.ExceptionMessage;
 import com.betstat.backend.utilities.GsonUtilities;
 import com.betstat.backend.utilities.JsoupUtilities;
 import com.betstat.backend.utilities.UtilitiesConstant;
@@ -65,6 +68,9 @@ public class ServicesCoupon {
 
 	@Value("${" + UtilitiesConstantProperties.COUPON_RESULT_CLASS + "}")
 	private String couponResultClass;
+
+	@Autowired
+	ServiceCouponDao serviceCouponDao;
 
 	public ModelResponse readCouponFromHtml(String path, String nameFile, Utente utente) {
 		logger.info("START readSourcePageHtml");
@@ -226,6 +232,22 @@ public class ServicesCoupon {
 		default: {
 			return UtilitiesConstant.INCORSO;
 		}
+		}
+	}
+
+	public ModelResponse restructureCoupon(Coupon coupon) {
+		logger.info("START restructureCoupon id : " + coupon.getId_coupon());
+		ModelResponse modelReponse;
+		try {
+			modelReponse = new OKResponse();
+			coupon.setEsito(GsonUtilities
+					.getEsitoFromString(serviceCouponDao.getEsito(coupon.getEsito().getId_esito()).getDescription()));
+			coupon.setTipo(GsonUtilities
+					.getTipoFromString(serviceCouponDao.getTipo(coupon.getTipo().getId_tipo()).getDescription()));
+			modelReponse.setDescription(GsonUtilities.getStringFromCoupon(coupon));
+			return modelReponse;
+		} catch (Exception exception) {
+			return ExceptionMessage.getMessageExceptionModelResponse(exception);
 		}
 	}
 }

@@ -351,7 +351,7 @@ public class CouponDao {
 					resultSet = statement.executeQuery(query);
 
 					while (resultSet.next()) {
-						nome_esito = resultSet.getString("id_esito");
+						nome_esito = resultSet.getString("nome_esito");
 					}
 					if (nome_esito == UtilitiesConstant.UNDEFINED_STRING) {
 						return null;

@@ -59,6 +59,12 @@ public class CouponController {
 			} else {
 				// bisogna aggiornare il coupon
 				Coupon oldCoupon = GsonUtilities.getCouponFromString(modelresponseGetCoupon.getDescription());
+				logger.info("old coupon :" + oldCoupon.toString());
+				ModelResponse modelRistrCoupon = serviceCoupon.restructureCoupon(oldCoupon);
+				if (modelRistrCoupon instanceof OKResponse) {
+					Coupon oldCouponR = GsonUtilities.getCouponFromString(modelRistrCoupon.getDescription());
+					logger.info("old coupon :" + oldCouponR.toString());
+				}
 
 			}
 
