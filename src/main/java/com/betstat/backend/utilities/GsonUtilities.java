@@ -2,7 +2,10 @@ package com.betstat.backend.utilities;
 
 import com.betstat.backend.business.model.coupon.Coupon;
 import com.betstat.backend.business.model.coupon.Esito;
+import com.betstat.backend.business.model.coupon.Pronostico;
+import com.betstat.backend.business.model.coupon.Squadra;
 import com.betstat.backend.business.model.coupon.Tipo;
+import com.betstat.backend.business.model.coupon.Utente;
 import com.google.gson.Gson;
 
 public class GsonUtilities {
@@ -71,6 +74,72 @@ public class GsonUtilities {
 	public static String getStringFromTipo(Esito esito) {
 		Gson gson = new Gson();
 		return gson.toJson(esito);
+	}
+
+	/**
+	 * Converte una stringa in un oggetto di tipo Utente
+	 * 
+	 * @param utenteString
+	 * @return Utente
+	 */
+	public static Utente getUtenteFromString(String utenteString) {
+		Gson gson = new Gson();
+		return gson.fromJson(utenteString, Utente.class);
+	}
+
+	/**
+	 * Converte un oggetto di tipo Utente in json
+	 * 
+	 * @param utente
+	 * @return json del Utente
+	 */
+	public static String getStringFromUtente(Utente utente) {
+		Gson gson = new Gson();
+		return gson.toJson(utente);
+	}
+
+	/**
+	 * Converte una stringa in un oggetto di tipo Squadra
+	 * 
+	 * @param squadraString
+	 * @return Squadra
+	 */
+	public static Squadra getSquadraFromString(String squadraString) {
+		Gson gson = new Gson();
+		return gson.fromJson(squadraString, Squadra.class);
+	}
+
+	/**
+	 * Converte un oggetto di tipo Squadra in json
+	 * 
+	 * @param squadra
+	 * @return json di Squadra
+	 */
+	public static String getStringFromSquadra(Squadra squadra) {
+		Gson gson = new Gson();
+		return gson.toJson(squadra);
+	}
+
+	/**
+	 * Converte una stringa in un oggetto di tipo Pronostico
+	 * 
+	 * @param pronosticoString
+	 * @return Pronostico
+	 */
+	public static Pronostico getPronosticoFromString(String pronosticoString) {
+		Gson gson = new Gson();
+		return gson.fromJson(pronosticoString, Pronostico.class);
+	}
+
+	/**
+	 * Converte un oggetto di tipo Pronostico in json
+	 * 
+	 * @param pronostico
+	 * @return json di Pronostico
+	 */
+	public static String getStringFromPronostico(Pronostico pronostico) {
+		Gson gson = new Gson();
+		return gson.toJson(pronostico);
 	}
 
 }

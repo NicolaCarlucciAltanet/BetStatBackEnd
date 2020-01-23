@@ -143,7 +143,7 @@ public class ServicesCoupon {
 									+ element.getElementsByClass(couponMarketName).text().split("\\(")[0]
 											.split("\\)")[0];
 						}
-						dettaglioCouponPrec.setPronostico(new Pronostico("", pronostico));
+						dettaglioCouponPrec.setPronostico(new Pronostico(UtilitiesConstant.UNDEFINED_INT, pronostico));
 						dettaglioCouponPrec.setData_dettaglio_coupon(
 								DateUtilities.elaborateDate(element.getElementsByClass(coupontEventDate).text()));
 						dettaglioCouponPrec.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
@@ -163,7 +163,7 @@ public class ServicesCoupon {
 						dettaglioCoupon.setSquadra_ospite(dettaglioCouponPrec.getSquadra_ospite());
 						dettaglioCoupon.setData_dettaglio_coupon(dettaglioCoupon.getData_dettaglio_coupon());
 						dettaglioCoupon.setId_evento(dettaglioCoupon.getId_evento());
-						dettaglioCoupon.setPronostico(new Pronostico("", pronostico));
+						dettaglioCoupon.setPronostico(new Pronostico(UtilitiesConstant.UNDEFINED_INT, pronostico));
 						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
 						dettaglioCoupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito));
@@ -202,8 +202,8 @@ public class ServicesCoupon {
 		cod_event = cod_event.replaceAll("\\s+", "");
 		dettaglioCoupon.setId_evento(cod_event);
 		String squadreNoCodEvent = input.substring(positionWhiteSpace, input.length());
-		dettaglioCoupon.setSquadra_casa(new Squadra("", squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
-		dettaglioCoupon.setSquadra_ospite(new Squadra("", squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
+		dettaglioCoupon.setSquadra_casa(new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
+		dettaglioCoupon.setSquadra_ospite(new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
 		return dettaglioCoupon;
 	}
 
@@ -235,6 +235,12 @@ public class ServicesCoupon {
 		}
 	}
 
+	/**
+	 * Ristruttura il coupon in seguito alla get dal database.
+	 * 
+	 * @param coupon Coupon da ristrutturare
+	 * @return ModelResponse con il coupon ristrutturato o con l'errore.
+	 */
 	public ModelResponse restructureCoupon(Coupon coupon) {
 		logger.info("START restructureCoupon id : " + coupon.getId_coupon());
 		ModelResponse modelReponse;
@@ -250,4 +256,7 @@ public class ServicesCoupon {
 			return ExceptionMessage.getMessageExceptionModelResponse(exception);
 		}
 	}
+	
+	
+	
 }

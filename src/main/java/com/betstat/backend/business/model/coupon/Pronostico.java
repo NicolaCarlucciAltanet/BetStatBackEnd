@@ -2,23 +2,23 @@ package com.betstat.backend.business.model.coupon;
 
 public class Pronostico {
 
-	private String id_pronostico;
+	private int id_pronostico;
 
 	private String nome_pronostico;
 
 	public Pronostico() {
 	}
 
-	public Pronostico(String id_pronostico, String nome_pronostico) {
+	public Pronostico(int id_pronostico, String nome_pronostico) {
 		this.id_pronostico = id_pronostico;
 		this.nome_pronostico = nome_pronostico;
 	}
 
-	public String getId_pronostico() {
+	public int getId_pronostico() {
 		return id_pronostico;
 	}
 
-	public void setId_pronostico(String id_pronostico) {
+	public void setId_pronostico(int id_pronostico) {
 		this.id_pronostico = id_pronostico;
 	}
 

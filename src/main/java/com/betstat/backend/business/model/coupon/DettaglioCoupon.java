@@ -1,7 +1,6 @@
 package com.betstat.backend.business.model.coupon;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class DettaglioCoupon {
 

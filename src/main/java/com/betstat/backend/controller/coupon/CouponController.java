@@ -52,7 +52,7 @@ public class CouponController {
 				// bisogna inserire il coupon
 				ModelResponse modelResponseInsertCoupon = serviceCouponDao.insertCoupon(coupon);
 				if (modelResponseInsertCoupon instanceof OKResponse) {
-					logger.info("coupon inserito correttamente");
+					logger.info("coupon " + coupon.getId_coupon() + " inserito correttamente");
 				} else {
 					logger.error(modelResponseInsertCoupon.getDescription());
 				}
@@ -63,7 +63,8 @@ public class CouponController {
 				ModelResponse modelRistrCoupon = serviceCoupon.restructureCoupon(oldCoupon);
 				if (modelRistrCoupon instanceof OKResponse) {
 					Coupon oldCouponR = GsonUtilities.getCouponFromString(modelRistrCoupon.getDescription());
-					logger.info("old coupon :" + oldCouponR.toString());
+					logger.info("old couponR :" + oldCouponR.toString());
+					serviceCouponDao.updateCoupon(oldCouponR, coupon);
 				}
 
 			}
