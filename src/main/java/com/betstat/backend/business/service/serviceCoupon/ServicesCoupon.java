@@ -140,7 +140,7 @@ public class ServicesCoupon {
 						if (pronostico.equalsIgnoreCase(UtilitiesConstant.OVER)
 								|| pronostico.equalsIgnoreCase(UtilitiesConstant.UNDER)) {
 							pronostico = pronostico + " "
-									+ element.getElementsByClass(couponMarketName).text().split("\\(")[0]
+									+ element.getElementsByClass(couponMarketName).text().split("\\(")[1]
 											.split("\\)")[0];
 						}
 						dettaglioCouponPrec.setPronostico(new Pronostico(UtilitiesConstant.UNDEFINED_INT, pronostico));
@@ -161,8 +161,8 @@ public class ServicesCoupon {
 						DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
 						dettaglioCoupon.setSquadra_casa(dettaglioCouponPrec.getSquadra_casa());
 						dettaglioCoupon.setSquadra_ospite(dettaglioCouponPrec.getSquadra_ospite());
-						dettaglioCoupon.setData_dettaglio_coupon(dettaglioCoupon.getData_dettaglio_coupon());
-						dettaglioCoupon.setId_evento(dettaglioCoupon.getId_evento());
+						dettaglioCoupon.setData_dettaglio_coupon(dettaglioCouponPrec.getData_dettaglio_coupon());
+						dettaglioCoupon.setId_evento(dettaglioCouponPrec.getId_evento());
 						dettaglioCoupon.setPronostico(new Pronostico(UtilitiesConstant.UNDEFINED_INT, pronostico));
 						dettaglioCoupon.setQuota(getQuota(element.getElementsByClass(couponMarketName).text()));
 						String esito = getResult(element.getElementsByClass(couponResultClass).attr("style"));
@@ -200,10 +200,12 @@ public class ServicesCoupon {
 		int positionWhiteSpace = input.indexOf(" ");
 		String cod_event = input.substring(0, positionWhiteSpace);
 		cod_event = cod_event.replaceAll("\\s+", "");
-		dettaglioCoupon.setId_evento(cod_event);
+		dettaglioCoupon.setId_evento(Integer.parseInt(cod_event));
 		String squadreNoCodEvent = input.substring(positionWhiteSpace, input.length());
-		dettaglioCoupon.setSquadra_casa(new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
-		dettaglioCoupon.setSquadra_ospite(new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
+		dettaglioCoupon.setSquadra_casa(
+				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
+		dettaglioCoupon.setSquadra_ospite(
+				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
 		return dettaglioCoupon;
 	}
 
@@ -256,7 +258,5 @@ public class ServicesCoupon {
 			return ExceptionMessage.getMessageExceptionModelResponse(exception);
 		}
 	}
-	
-	
-	
+
 }

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class DettaglioCoupon {
 
-	private String id_dettaglio_coupon;
+	private int id_dettaglio_coupon;
 
 	private Squadra squadra_casa;
 
@@ -12,7 +12,7 @@ public class DettaglioCoupon {
 
 	private Timestamp data_dettaglio_coupon;
 
-	private String id_evento;
+	private int id_evento;
 
 	private Pronostico pronostico;
 
@@ -23,8 +23,8 @@ public class DettaglioCoupon {
 	public DettaglioCoupon() {
 	}
 
-	public DettaglioCoupon(String id_dettaglio_coupon, Squadra squadra_casa, Squadra squadra_ospite,
-			Timestamp data_dettaglio_coupon, String id_evento, Pronostico pronostico, float quota, Esito esito) {
+	public DettaglioCoupon(int id_dettaglio_coupon, Squadra squadra_casa, Squadra squadra_ospite,
+			Timestamp data_dettaglio_coupon, int id_evento, Pronostico pronostico, float quota, Esito esito) {
 		this.id_dettaglio_coupon = id_dettaglio_coupon;
 		this.squadra_casa = squadra_casa;
 		this.squadra_ospite = squadra_ospite;
@@ -35,11 +35,11 @@ public class DettaglioCoupon {
 		this.esito = esito;
 	}
 
-	public String getId_dettaglio_coupon() {
+	public int getId_dettaglio_coupon() {
 		return id_dettaglio_coupon;
 	}
 
-	public void setId_dettaglio_coupon(String id_dettaglio_coupon) {
+	public void setId_dettaglio_coupon(int id_dettaglio_coupon) {
 		this.id_dettaglio_coupon = id_dettaglio_coupon;
 	}
 
@@ -67,11 +67,11 @@ public class DettaglioCoupon {
 		this.data_dettaglio_coupon = data_dettaglio_coupon;
 	}
 
-	public String getId_evento() {
+	public int getId_evento() {
 		return id_evento;
 	}
 
-	public void setId_evento(String id_evento) {
+	public void setId_evento(int id_evento) {
 		this.id_evento = id_evento;
 	}
 

@@ -1,12 +1,18 @@
 package com.betstat.backend.utilities;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.DettaglioCoupon;
 import com.betstat.backend.business.model.coupon.Esito;
 import com.betstat.backend.business.model.coupon.Pronostico;
 import com.betstat.backend.business.model.coupon.Squadra;
 import com.betstat.backend.business.model.coupon.Tipo;
 import com.betstat.backend.business.model.coupon.Utente;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class GsonUtilities {
 
@@ -140,6 +146,30 @@ public class GsonUtilities {
 	public static String getStringFromPronostico(Pronostico pronostico) {
 		Gson gson = new Gson();
 		return gson.toJson(pronostico);
+	}
+
+	/**
+	 * Converte una stringa in una lista di DettaglioCoupon
+	 * 
+	 * @param listDettaglioCouponString
+	 * @return List DettaglioCoupon
+	 */
+	public static List<DettaglioCoupon> getListDettaglioCouponFromString(String listDettaglioCouponString) {
+		Gson gson = new Gson();
+		Type listOfMyClassObject = new TypeToken<ArrayList<DettaglioCoupon>>() {
+		}.getType();
+		return gson.fromJson(listDettaglioCouponString, listOfMyClassObject);
+	}
+
+	/**
+	 * Converte una lista di dettaglioCoupon in json
+	 * 
+	 * @param listDettaglioCoupon
+	 * @return json di listDettaglioCoupon
+	 */
+	public static String getStringFromListDettaglioCoupon(List<DettaglioCoupon> listDettaglioCoupon) {
+		Gson gson = new Gson();
+		return gson.toJson(listDettaglioCoupon);
 	}
 
 }

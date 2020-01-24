@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -469,6 +471,12 @@ public class CouponDao {
 		}
 	}
 
+	/**
+	 * Resituisce l'utente dal db dato il suo id
+	 * 
+	 * @param id_utente
+	 * @return ModelResponse delll'utente o null se non c'è
+	 */
 	public ModelResponse getUtente(int id_utente) {
 		logger.info("Ricerca utente per l'id :" + id_utente);
 		Connection connection = getConnection();
@@ -520,6 +528,13 @@ public class CouponDao {
 		}
 	}
 
+	/**
+	 * Inserisce il dettaglio del coupon nel database
+	 * 
+	 * @param dettaglioCoupon
+	 * @param id_coupon
+	 * @return ModelResponse o null se ci sono errori
+	 */
 	public ModelResponse insertDettaglioCoupon(DettaglioCoupon dettaglioCoupon, String id_coupon) {
 		logger.info("inserimento dettaglio coupon :" + dettaglioCoupon.toString());
 		Connection connection = getConnection();
@@ -527,7 +542,7 @@ public class CouponDao {
 			String query = " INSERT INTO dettaglio_coupon (data_dettaglio_coupon,id_squadra_casa,id_squadra_ospite,id_coupon,id_evento,id_pronostico,quota,id_esito) "
 					+ "VALUES ('" + dettaglioCoupon.getData_dettaglio_coupon() + "',"
 					+ dettaglioCoupon.getSquadra_casa().getId_squadra() + ","
-					+ dettaglioCoupon.getSquadra_ospite().getId_squadra() + "," + id_coupon + ","
+					+ dettaglioCoupon.getSquadra_ospite().getId_squadra() + ",'" + id_coupon + "',"
 					+ dettaglioCoupon.getId_evento() + "," + dettaglioCoupon.getPronostico().getId_pronostico() + ","
 					+ dettaglioCoupon.getQuota() + "," + dettaglioCoupon.getEsito().getId_esito() + ")";
 			Statement statement = ConfigDao.getStatement(connection);
@@ -544,6 +559,66 @@ public class CouponDao {
 					return eRRORResponse;
 				} finally {
 					ConfigDao.closeResultSetAndConnection(statement, connection);
+				}
+			} else {
+				ERRORResponse eRRORResponseSt = new ERRORResponse();
+				eRRORResponseSt.setDescription("statement null");
+				return eRRORResponseSt;
+			}
+		} else {
+			ERRORResponse eRRORResponseC = new ERRORResponse();
+			eRRORResponseC.setDescription("statement null");
+			return eRRORResponseC;
+		}
+	}
+
+	public ModelResponse getDettaglioCoupon(int id_coupon) {
+		logger.info("Ricerca del dettaglio coupon per il coupon:" + id_coupon);
+		Connection connection = getConnection();
+		ResultSet resultSet = null;
+		if (connection != null) {
+			String query = " Select * from dettaglio_Coupon where id_coupon = '" + id_coupon + "'";
+			Statement statement = ConfigDao.getStatement(connection);
+			if (statement != null) {
+				try {
+					boolean founded = false;
+					logger.info("Esecuzione della query :" + query);
+					resultSet = statement.executeQuery(query);
+					List<DettaglioCoupon> listDettaglioCoupon = new ArrayList<DettaglioCoupon>();
+					while (resultSet.next()) {
+						DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
+						founded = true;
+						dettaglioCoupon.setId_dettaglio_coupon(resultSet.getInt("id_dettaglio_coupon"));
+						dettaglioCoupon.setData_dettaglio_coupon(resultSet.getTimestamp("data_dettaglio_coupon"));
+						Squadra squadraCasa = new Squadra();
+						squadraCasa.setId_squadra(resultSet.getInt("id_squadra_casa"));
+						dettaglioCoupon.setSquadra_casa(squadraCasa);
+						Squadra squadraOspite = new Squadra();
+						squadraOspite.setId_squadra(resultSet.getInt("id_squadra_ospite"));
+						dettaglioCoupon.setSquadra_ospite(squadraOspite);
+						dettaglioCoupon.setId_evento(resultSet.getInt("id_squadra_ospite"));
+						Pronostico pronostico = new Pronostico();
+						pronostico.setId_pronostico(resultSet.getInt("id_pronostico"));
+						dettaglioCoupon.setPronostico(pronostico);
+						dettaglioCoupon.setQuota(resultSet.getFloat("quota"));
+						Esito esito = new Esito();
+						esito.setId_esito(resultSet.getInt("id_esito"));
+						dettaglioCoupon.setEsito(esito);
+						listDettaglioCoupon.add(dettaglioCoupon);
+					}
+					if (!founded) {
+						return null;
+					} else {
+						OKResponse oKResponse = new OKResponse();
+						oKResponse.setDescription(GsonUtilities.getStringFromListDettaglioCoupon(listDettaglioCoupon));
+						return oKResponse;
+					}
+				} catch (SQLException sQLException) {
+					ERRORResponse eRRORResponse = ExceptionMessage.getMessageExceptionModelResponse(sQLException);
+					logger.error(eRRORResponse.getDescription());
+					return eRRORResponse;
+				} finally {
+					ConfigDao.closeResultSetAndConnection(resultSet, statement, connection);
 				}
 			} else {
 				ERRORResponse eRRORResponseSt = new ERRORResponse();
@@ -801,7 +876,7 @@ public class CouponDao {
 		logger.info("inserimento nuovo pronostico :" + nome_pronostico);
 		Connection connection = getConnection();
 		if (connection != null) {
-			String query = " INSERT INTO nome_pronostico (nome_pronostico) VALUES ('" + nome_pronostico + "')";
+			String query = " INSERT INTO pronostico (nome_pronostico) VALUES ('" + nome_pronostico + "')";
 			Statement statement = ConfigDao.getStatement(connection);
 			if (statement != null) {
 				try {

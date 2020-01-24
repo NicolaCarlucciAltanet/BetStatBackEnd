@@ -53,6 +53,7 @@ public class CouponController {
 				ModelResponse modelResponseInsertCoupon = serviceCouponDao.insertCoupon(coupon);
 				if (modelResponseInsertCoupon instanceof OKResponse) {
 					logger.info("coupon " + coupon.getId_coupon() + " inserito correttamente");
+					serviceCouponDao.insertDettaglioCoupon(coupon);
 				} else {
 					logger.error(modelResponseInsertCoupon.getDescription());
 				}
