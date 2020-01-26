@@ -39,6 +39,7 @@ public class UtilitiesConstantProperties {
 
 	public static final String COUPON_RESULT_CLASS = "coupon.result.class";
 
+	public static final String COUPON_AMOUNT = "coupon.amount";
 
 
 }

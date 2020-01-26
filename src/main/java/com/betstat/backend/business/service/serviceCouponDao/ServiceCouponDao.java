@@ -296,6 +296,12 @@ public class ServiceCouponDao {
 		return modelResonse;
 	}
 
+	/**
+	 * Inserisce il dettaglio del coupon
+	 * 
+	 * @param coupon Coupon avente il dettaglio
+	 * @return ModelResponse
+	 */
 	public ModelResponse insertDettaglioCoupon(Coupon coupon) {
 		logger.info(" insertDettaglioCoupon : " + coupon.getId_coupon());
 		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
@@ -447,6 +453,19 @@ public class ServiceCouponDao {
 		} else {
 			return new OKResponse();
 		}
+	}
+
+	public ModelResponse deleteDettaglioCoupon(Coupon coupon) {
+		logger.info(" deleteDettaglioCoupon : " + coupon.getId_coupon());
+		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
+		return couponDao.deleteDettaglioCoupon(coupon.getId_coupon());
+
+	}
+
+	public ModelResponse getDettaglioCoupon(Coupon coupon) {
+		logger.info(" getDettaglioCoupon : " + coupon.getId_coupon());
+		CouponDao couponDao = new CouponDao(dbUrl, dbRoot, dbPassword, dbStringConnection);
+		return couponDao.getDettaglioCoupon(coupon.getId_coupon());
 
 	}
 

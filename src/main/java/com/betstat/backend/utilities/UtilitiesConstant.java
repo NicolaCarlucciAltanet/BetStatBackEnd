@@ -32,4 +32,10 @@ public class UtilitiesConstant {
 
 	public static final String ERROR = "Error";
 
+	// -----------------COUPON_______________________________________
+
+	public static final String MULTIPLA = "Multipla";
+
+	public static final String INCORSONOWHITESPACE = "Incorso";
+
 }

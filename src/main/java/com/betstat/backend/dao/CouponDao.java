@@ -572,7 +572,13 @@ public class CouponDao {
 		}
 	}
 
-	public ModelResponse getDettaglioCoupon(int id_coupon) {
+	/**
+	 * Restituisce il dettaglio del coupon dato il suo id
+	 * 
+	 * @param id_coupon
+	 * @return ModelResponse o null
+	 */
+	public ModelResponse getDettaglioCoupon(String id_coupon) {
 		logger.info("Ricerca del dettaglio coupon per il coupon:" + id_coupon);
 		Connection connection = getConnection();
 		ResultSet resultSet = null;
@@ -619,6 +625,44 @@ public class CouponDao {
 					return eRRORResponse;
 				} finally {
 					ConfigDao.closeResultSetAndConnection(resultSet, statement, connection);
+				}
+			} else {
+				ERRORResponse eRRORResponseSt = new ERRORResponse();
+				eRRORResponseSt.setDescription("statement null");
+				return eRRORResponseSt;
+			}
+		} else {
+			ERRORResponse eRRORResponseC = new ERRORResponse();
+			eRRORResponseC.setDescription("statement null");
+			return eRRORResponseC;
+		}
+	}
+
+	/**
+	 * Rimuove il dettaglio coupon avente un certo id
+	 * 
+	 * @param id_coupon
+	 * @return ModelResponse o null
+	 */
+	public ModelResponse deleteDettaglioCoupon(String id_coupon) {
+		logger.info("rimozione del dettaglio coupon per il coupon :" + id_coupon);
+		Connection connection = getConnection();
+		if (connection != null) {
+			String query = "DELETE FROM dettaglio_coupon WHERE id_coupon = '" + id_coupon + "'";
+			Statement statement = ConfigDao.getStatement(connection);
+			if (statement != null) {
+				try {
+					logger.info("Esecuzione della query :" + query);
+					statement.executeUpdate(query);
+					logger.info("dettaglio_coupon :" + id_coupon + " completato");
+					OKResponse oKResponse = new OKResponse();
+					return oKResponse;
+				} catch (SQLException sQLException) {
+					ERRORResponse eRRORResponse = ExceptionMessage.getMessageExceptionModelResponse(sQLException);
+					logger.error(eRRORResponse.getDescription());
+					return eRRORResponse;
+				} finally {
+					ConfigDao.closeResultSetAndConnection(statement, connection);
 				}
 			} else {
 				ERRORResponse eRRORResponseSt = new ERRORResponse();

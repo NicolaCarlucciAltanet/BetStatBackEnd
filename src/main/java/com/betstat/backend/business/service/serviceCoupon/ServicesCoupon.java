@@ -69,6 +69,9 @@ public class ServicesCoupon {
 	@Value("${" + UtilitiesConstantProperties.COUPON_RESULT_CLASS + "}")
 	private String couponResultClass;
 
+	@Value("${" + UtilitiesConstantProperties.COUPON_AMOUNT + "}")
+	private String couponAmount;
+
 	@Autowired
 	ServiceCouponDao serviceCouponDao;
 
@@ -104,21 +107,45 @@ public class ServicesCoupon {
 				// TIPO COUPON
 				String tipo_coupon = doc.getElementsByClass(coupontTipo).get(0).text();
 				coupon.setTipo(new Tipo(UtilitiesConstant.UNDEFINED_INT, tipo_coupon));
+				float vincitaFloat = 0;
+				if (tipo_coupon.equalsIgnoreCase(UtilitiesConstant.MULTIPLA)) {
+					String amount = doc.getElementsByClass(couponAmount).text();
+					vincitaFloat = Float.parseFloat(amount.replaceAll("EUR", "").replaceAll(",", "."));
+				}
 
 				try {
 					// ESITO
 					String esito_coupon = doc.getElementsByClass(coupontTipo).get(1).text()
 							.replaceAll("fiber_manual_record", "").replaceAll(" ", "");
+					if (esito_coupon.equalsIgnoreCase(UtilitiesConstant.INCORSONOWHITESPACE)) {
+						esito_coupon = "In corso";
+					}
+					if (esito_coupon.equalsIgnoreCase(UtilitiesConstant.VINCENTE)) {
+						coupon.setVincita(vincitaFloat);
+					}
 					coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito_coupon));
-
+					float importo = 0;
 					// IMPORTO
-					float importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
-							.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
+					if (tipo_coupon.equalsIgnoreCase(UtilitiesConstant.MULTIPLA)) {
+						importo = Float.parseFloat(
+								doc.getElementsByClass(coupontTipo).get(2).text().replaceAll("&nbsp;EUR", "")
+										.replaceAll("EUR", "").replaceAll(",", ".").replaceAll("€", ""));
+					} else {
+						importo = Float.parseFloat(doc.getElementsByClass(coupontTipo).get(3).text()
+								.replaceAll("&nbsp;EUR", "").replaceAll("EUR", "").replaceAll(",", "."));
+					}
+
 					coupon.setImporto(importo);
 				} catch (Exception exception) {
 					// ESITO
 					String esito_coupon = doc.getElementsByClass("data-value tipoc ng-star-inserted").get(0).text()
 							.replaceAll("fiber_manual_record", "").replaceAll(" ", "");
+					if (esito_coupon.equalsIgnoreCase(UtilitiesConstant.INCORSONOWHITESPACE)) {
+						esito_coupon = "In corso";
+					}
+					if (esito_coupon.equalsIgnoreCase(UtilitiesConstant.VINCENTE)) {
+						coupon.setVincita(vincitaFloat);
+					}
 					coupon.setEsito(new Esito(UtilitiesConstant.UNDEFINED_INT, esito_coupon));
 
 					// IMPORTO
@@ -254,6 +281,37 @@ public class ServicesCoupon {
 					.getTipoFromString(serviceCouponDao.getTipo(coupon.getTipo().getId_tipo()).getDescription()));
 			modelReponse.setDescription(GsonUtilities.getStringFromCoupon(coupon));
 			return modelReponse;
+		} catch (Exception exception) {
+			return ExceptionMessage.getMessageExceptionModelResponse(exception);
+		}
+	}
+
+	/**
+	 * Ristruttura il dettaglio Coupon in seguito alla get dal database
+	 * 
+	 * @param coupon
+	 * @return ModelResponse
+	 */
+	public ModelResponse restructureDettaglioCoupon(Coupon coupon) {
+		logger.info("START restructureDettaglioCoupon id : " + coupon.getId_coupon());
+		List<DettaglioCoupon> oldLIstDettaglioCoupon = coupon.getListDettaglioCoupon();
+		List<DettaglioCoupon> newLIstDettaglioCoupon = new ArrayList<DettaglioCoupon>();
+		ModelResponse modelResponse;
+		try {
+			for (DettaglioCoupon dettaglioCoupon : oldLIstDettaglioCoupon) {
+				dettaglioCoupon.setSquadra_casa(GsonUtilities.getSquadraFromString(serviceCouponDao
+						.getSquadra(dettaglioCoupon.getSquadra_casa().getId_squadra()).getDescription()));
+				dettaglioCoupon.setSquadra_ospite(GsonUtilities.getSquadraFromString(serviceCouponDao
+						.getSquadra(dettaglioCoupon.getSquadra_ospite().getId_squadra()).getDescription()));
+				dettaglioCoupon.setPronostico(GsonUtilities.getPronosticoFromString(serviceCouponDao
+						.getPronostico(dettaglioCoupon.getPronostico().getId_pronostico()).getDescription()));
+				dettaglioCoupon.setEsito(GsonUtilities.getEsitoFromString(
+						serviceCouponDao.getEsito(dettaglioCoupon.getEsito().getId_esito()).getDescription()));
+				newLIstDettaglioCoupon.add(dettaglioCoupon);
+			}
+			modelResponse = new OKResponse();
+			modelResponse.setDescription(GsonUtilities.getStringFromListDettaglioCoupon(newLIstDettaglioCoupon));
+			return modelResponse;
 		} catch (Exception exception) {
 			return ExceptionMessage.getMessageExceptionModelResponse(exception);
 		}

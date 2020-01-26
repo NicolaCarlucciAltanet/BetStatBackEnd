@@ -1,5 +1,7 @@
 package com.betstat.backend.controller.coupon;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.betstat.backend.business.model.coupon.Coupon;
+import com.betstat.backend.business.model.coupon.DettaglioCoupon;
 import com.betstat.backend.business.model.coupon.Utente;
 import com.betstat.backend.business.model.response.ModelResponse;
 import com.betstat.backend.business.model.response.OKResponse;
@@ -60,12 +63,27 @@ public class CouponController {
 			} else {
 				// bisogna aggiornare il coupon
 				Coupon oldCoupon = GsonUtilities.getCouponFromString(modelresponseGetCoupon.getDescription());
-				logger.info("old coupon :" + oldCoupon.toString());
+				logger.info("old coupon Non ristrutturato :" + oldCoupon.toString());
 				ModelResponse modelRistrCoupon = serviceCoupon.restructureCoupon(oldCoupon);
 				if (modelRistrCoupon instanceof OKResponse) {
 					Coupon oldCouponR = GsonUtilities.getCouponFromString(modelRistrCoupon.getDescription());
-					logger.info("old couponR :" + oldCouponR.toString());
+					logger.info("old coupon Ristrutturato :" + oldCouponR.toString());
 					serviceCouponDao.updateCoupon(oldCouponR, coupon);
+					// aggiornamento dettaglio
+					ModelResponse modelResponseDeleteDettaglioCoupon = serviceCouponDao.deleteDettaglioCoupon(coupon);
+					if (modelResponseDeleteDettaglioCoupon instanceof OKResponse) {
+						serviceCouponDao.insertDettaglioCoupon(coupon);
+					}else {
+						//errore
+					}
+					
+					//prova
+					List<DettaglioCoupon> list = GsonUtilities.getListDettaglioCouponFromString(serviceCouponDao.getDettaglioCoupon(coupon).getDescription());
+					coupon.setListDettaglioCoupon(list);
+					List<DettaglioCoupon> listR = GsonUtilities.getListDettaglioCouponFromString(serviceCoupon.restructureDettaglioCoupon(coupon).getDescription());
+					oldCouponR.setListDettaglioCoupon(listR);
+					System.out.println(GsonUtilities.getStringFromCoupon(oldCouponR));
+
 				}
 
 			}
