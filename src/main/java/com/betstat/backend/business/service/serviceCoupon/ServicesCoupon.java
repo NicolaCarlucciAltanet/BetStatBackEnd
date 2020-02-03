@@ -164,12 +164,8 @@ public class ServicesCoupon {
 					if (!element.getElementsByClass(couponLabelEventName).isEmpty()) {
 						dettaglioCouponPrec = separateCod(element.getElementsByClass(couponLabelEventName).text());
 						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
-						if (pronostico.equalsIgnoreCase(UtilitiesConstant.OVER)
-								|| pronostico.equalsIgnoreCase(UtilitiesConstant.UNDER)) {
-							pronostico = pronostico + " "
-									+ element.getElementsByClass(couponMarketName).text().split("\\(")[1]
-											.split("\\)")[0];
-						}
+						pronostico = getPronosticoFromLabel(element.getElementsByClass(couponMarketName).text(),
+								pronostico);
 						dettaglioCouponPrec.setPronostico(new Pronostico(UtilitiesConstant.UNDEFINED_INT, pronostico));
 						dettaglioCouponPrec.setData_dettaglio_coupon(
 								DateUtilities.elaborateDate(element.getElementsByClass(coupontEventDate).text()));
@@ -179,12 +175,9 @@ public class ServicesCoupon {
 						listDettaglioCoupon.add(dettaglioCouponPrec);
 					} else {
 						String pronostico = element.getElementsByClass(coupontMatchSelection).text();
-						if (pronostico.equalsIgnoreCase(UtilitiesConstant.OVER)
-								|| pronostico.equalsIgnoreCase(UtilitiesConstant.UNDER)) {
-							pronostico = pronostico + " "
-									+ element.getElementsByClass(couponMarketName).text().split("\\(")[1]
-											.split("\\)")[0];
-						}
+						pronostico = getPronosticoFromLabel(element.getElementsByClass(couponMarketName).text(),
+								pronostico);
+
 						DettaglioCoupon dettaglioCoupon = new DettaglioCoupon();
 						dettaglioCoupon.setSquadra_casa(dettaglioCouponPrec.getSquadra_casa());
 						dettaglioCoupon.setSquadra_ospite(dettaglioCouponPrec.getSquadra_ospite());
@@ -230,9 +223,9 @@ public class ServicesCoupon {
 		dettaglioCoupon.setId_evento(Integer.parseInt(cod_event));
 		String squadreNoCodEvent = input.substring(positionWhiteSpace, input.length());
 		dettaglioCoupon.setSquadra_casa(
-				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[0].replaceAll("\\s+", "")));
+				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split(" -")[0].substring(1,squadreNoCodEvent.split(" -")[0].length())));
 		dettaglioCoupon.setSquadra_ospite(
-				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("-")[1].replaceAll("\\s+", "")));
+				new Squadra(UtilitiesConstant.UNDEFINED_INT, squadreNoCodEvent.split("- ")[1]));
 		return dettaglioCoupon;
 	}
 
@@ -315,6 +308,76 @@ public class ServicesCoupon {
 		} catch (Exception exception) {
 			return ExceptionMessage.getMessageExceptionModelResponse(exception);
 		}
+	}
+
+	private String getPronosticoFromLabel(String family, String result) {
+		String pronosticoNoQNpP = "";
+
+		String pronosticoNoQ = family.split("] ")[1];
+		String pronosticoFinale = "";
+		if (pronosticoNoQ.contains("(")) {
+			pronosticoNoQNpP = pronosticoNoQ.split(" \\(")[0];
+		}
+		switch (pronosticoNoQNpP) {
+		case UtilitiesConstant.OVERUNDER1X2: { // 1X2 + over/under
+			pronosticoFinale = result + " " + pronosticoNoQ.split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER1TOSPITE: { // over/under 1° t ospite
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U ")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER1TCASA: { // over/under 1° t casa
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U ")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER2TOSPITE: { // over/under 2° t ospite
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U ")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER2TCASA: { // over/under 2° t casa
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U ")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER1T: { // over/under 1°t
+			pronosticoFinale = result + " " + pronosticoNoQ.split("Over/Under")[1].split("\\(")[1].split("\\)")[0]
+					+ pronosticoNoQ.split("Over/Under")[1].split("\\(")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER2T: { // over/under 2°t
+			pronosticoFinale = result + " " + pronosticoNoQ.split("Over/Under")[1].split("\\(")[1].split("\\)")[0]
+					+ pronosticoNoQ.split("Over/Under")[1].split("\\(")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDERCASA: { // over/under casa
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDEROSPITE: { // over/under casa
+			pronosticoFinale = pronosticoNoQ.split("O/U ")[1].split("\\(")[0] + result + " "
+					+ pronosticoNoQ.split("O/U")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER: { // over/under
+			pronosticoFinale = result + " " + pronosticoNoQ.split("Over/Under ")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		case UtilitiesConstant.OVERUNDER1X2DOPPIACHANCE: { // 1x2 OVER/UNDER doppia chance
+			pronosticoFinale = result + " " + pronosticoNoQ.split("O/U")[1].split("\\(")[1].split("\\)")[0];
+		}
+			break;
+		default: {
+			pronosticoFinale = result;
+		}
+		}
+
+		return pronosticoFinale;
+
 	}
 
 }

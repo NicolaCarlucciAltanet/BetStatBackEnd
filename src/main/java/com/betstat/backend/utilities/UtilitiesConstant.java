@@ -38,4 +38,27 @@ public class UtilitiesConstant {
 
 	public static final String INCORSONOWHITESPACE = "Incorso";
 
+	public static final String OVERUNDER1X2 = "1X2 + OverUnder";
+
+	public static final String OVERUNDER1TCASA = "O/U Casa 1°T";
+
+	public static final String OVERUNDER2TCASA = "O/U Casa 2°T";
+
+	public static final String OVERUNDER1TOSPITE = "O/U Ospite 1°T";
+
+	public static final String OVERUNDER2TOSPITE = "O/U Ospite 2°T";
+
+	public static final String OVERUNDER1T = "Over/Under 1°T";
+
+	public static final String OVERUNDER2T = "Over/Under 2°T";
+
+	public static final String OVERUNDERCASA = "O/U Casa";
+
+	public static final String OVERUNDEROSPITE = "O/U Ospite";
+
+	public static final String OVERUNDER = "Over/Under";
+	
+	public static final String OVERUNDER1X2DOPPIACHANCE = "Doppia Chance + O/U";
+
+
 }
